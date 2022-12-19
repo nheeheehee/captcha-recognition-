@@ -24,19 +24,15 @@ class CaptchaDataset(Dataset):
     """
 
     def __init__(
-        self, 
-        image_paths: Union[Path, str] 
-        = DATA_PATH, 
-        resize: Optional[tuple] 
-        = None
+        self, image_paths: Union[Path, str] = DATA_PATH, resize: Optional[tuple] = None
     ):
         """Defines dataset and transformation steps
 
         Args:
             image_paths (Union[Path, str], optional): directory to the png images.
                                                         Defaults to DATA_PATH.
-            resize (Optional[tuple], optional): a tuple of (height, width) that 
-                                                the image should be resized to. 
+            resize (Optional[tuple], optional): a tuple of (height, width) that
+                                                the image should be resized to.
                                                 Defaults to None.
         """
 
@@ -60,8 +56,7 @@ class CaptchaDataset(Dataset):
 
     def get_targets(self):
         """Get numeric labels for captcha alphanumeric sequences"""
-        self.target_sequence = [image.split("/")[-1][:-4] \
-                                for image in self.image_paths]
+        self.target_sequence = [image.split("/")[-1][:-4] for image in self.image_paths]
         self.index = 0
         self.char_id = {}
         self.id_char = {}
