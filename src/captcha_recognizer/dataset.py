@@ -24,8 +24,21 @@ class CaptchaDataset(Dataset):
     """
 
     def __init__(
-        self, image_paths: Union[Path, str] = DATA_PATH, resize: Optional[tuple] = None
+        self, 
+        image_paths: Union[Path, str] 
+        = DATA_PATH, 
+        resize: Optional[tuple] 
+        = None
     ):
+        """Defines dataset and transformation steps
+
+        Args:
+            image_paths (Union[Path, str], optional): directory to the png images.
+                                                        Defaults to DATA_PATH.
+            resize (Optional[tuple], optional): a tuple of (height, width) that 
+                                                the image should be resized to. 
+                                                Defaults to None.
+        """
 
         self.image_paths = glob.glob(os.path.join(image_paths, "*.png"))
 
@@ -40,20 +53,18 @@ class CaptchaDataset(Dataset):
                     transforms.Resize(resize),
                 ]
             )
-
         else:
             self.transforms = transforms.Compose(
                 [transforms.ToTensor(), transforms.Normalize(mean, std)]
             )
 
     def get_targets(self):
-        """Get numeric labels for captcha alphanumeric sequences
-        """
-        self.target_sequence = [image.split("/")[-1][:-4] for image in self.image_paths]
+        """Get numeric labels for captcha alphanumeric sequences"""
+        self.target_sequence = [image.split("/")[-1][:-4] \
+                                for image in self.image_paths]
         self.index = 0
         self.char_id = {}
         self.id_char = {}
-
         for sequence in self.target_sequence:
             for char in sequence:
                 if char not in self.char_id:
@@ -61,8 +72,8 @@ class CaptchaDataset(Dataset):
                     self.char_id[char] = self.index
                     self.id_char[self.index] = char
 
-    def save_target_dict(self, path:str):
-        """save the matching dict of numeric labels to alphanumeric character of captcha sequence 
+    def save_target_dict(self, path: str):
+        """save the matching dict of numeric labels to alphanumeric character of captcha sequence
 
         Args:
             path (str): path to save the matching dict
@@ -71,25 +82,34 @@ class CaptchaDataset(Dataset):
         pickle.dump(self.id_char, file)
         file.close()
 
-    def load_dict(self, path:str) -> dict:
-        """Load decoding dictionary 
+    def load_dict(self, path: str) -> dict:
+        """Load decoding dictionary
 
         Args:
             path (str): path that decoding dict was saved
 
         Returns:
-            dict: decode dict for 
+            dict: decode dict for
         """
         file = open(path, "rb")
         decode_dict = pickle.load(file)
         file.close()
-
         return decode_dict
 
-    def __len__(self):        
+    def __len__(self):
+        """Magic method to return the number of images in the directory"""
         return len(self.image_paths)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> tuple:
+        """Magic method to get a sample of input and output
+
+        Args:
+            item (int): an index within the range of the size of the datast
+
+        Returns:
+            tuple: original image array, tensor of the transformed image array, tensor of label array
+        """
+
         image = Image.open(self.image_paths[item]).convert(
             "RGB"
         )  # convert 4 channel image to 3 channels
@@ -101,8 +121,8 @@ class CaptchaDataset(Dataset):
 
 
 class CaptchaDataloader:
-    """Generate Train and Test dataloader for Dataset
-    """
+    """Generate Train and Test dataloader for Dataset"""
+
     def __init__(
         self,
         data_dir: Union[Path, str] = DATA_PATH,
@@ -127,14 +147,12 @@ class CaptchaDataloader:
             self.train_set, self.test_set = random_split(
                 self.full_dataset, [train_size, test_size]
             )
-
         else:
             self.train_set = self.full_dataset
             self.test_set = None
 
     def train_loader(self):
-        """generate train dataloader 
-        """
+        """generate train dataloader"""
         return DataLoader(
             self.train_set, batch_size=self.batch_size, shuffle=True, drop_last=True
         )
