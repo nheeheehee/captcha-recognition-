@@ -58,8 +58,8 @@ class CaptchaDataset(Dataset):
         """Get numeric labels for captcha alphanumeric sequences"""
         self.target_sequence = [image.split("/")[-1][:-4] for image in self.image_paths]
         self.index = 0
-        self.char_id = {}
-        self.id_char = {}
+        self.char_id = {"*":0}
+        self.id_char = {0:"*"}
         for sequence in self.target_sequence:
             for char in sequence:
                 if char not in self.char_id:
