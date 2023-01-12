@@ -14,18 +14,18 @@ class CaptchaModel(nn.Module):
         self.linear1 = nn.Linear(1152, 64)
         self.dropout = nn.Dropout(0.25)
 
-        self.gru = nn.GRU(64, 32, bidirectional=True, num_layers=2, dropout=0.25)
+        self.gru = nn.GRU(64, 32, bidirectional=True, num_layers=2, dropout=0.25, batch_first=True)
         self.output = nn.Linear(32 * 2, num_chars + 1)  # bidirectional
 
         self.log_softmax = nn.LogSoftmax(dim=2)
 
     def forward(self, images, targets=None):
-        b, c, h, w = images.size()
+        b, _, _, _ = images.size()
 
         x = F.relu(self.conv1(images))
-        x = F.relu(self.maxpool1(x))
+        x = self.maxpool1(x)
         x = F.relu(self.conv2(x))
-        x = F.relu(self.maxpool2(x))  # 1, 64, 18, 75
+        x = self.maxpool2(x)  # 1, 64, 18, 75
         x = x.permute(0, 3, 1, 2)  # 1, 75, 64, 18
         x = x.view(b, x.size(1), -1)
 
