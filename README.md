@@ -1,4 +1,4 @@
-# captcha-recognition-
+# captcha-recognition
 ## Captcha Recognition 
 
 Captcha recognition using PyTorch (Convolutional-RNN + CTC Loss)
