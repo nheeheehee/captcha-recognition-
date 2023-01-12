@@ -21,7 +21,6 @@ from config import (
     MODEL_PATH,
 )
 
-
 def train(model, no_epochs, train_loader, val_loader, lr, load_model=False):
     optimizer = torch.optim.Adam(params=model.parameters(), lr=lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -81,7 +80,7 @@ def train(model, no_epochs, train_loader, val_loader, lr, load_model=False):
 
         scheduler.step(val_loss)
 
-        # utils.save_model(model, str(MODEL_PATH/"model.pt"))
+        utils.save_model(model, str(MODEL_PATH/"model.pt"))
 
     plt.figure()
     plt.plot(train_loss_all, color="red", label="Train Loss")
