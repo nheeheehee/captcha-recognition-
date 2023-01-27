@@ -1,5 +1,5 @@
 # captcha-recognition
-## Captcha Recognition 
+## Captcha Recognition
 
 Captcha recognition using PyTorch (Convolutional-RNN + CTC Loss)
 Dataset: Captcha images by Keras
@@ -24,4 +24,13 @@ For the extra modules, which are not a standard pip modules (either from your ow
 
 ### FastAPI deploy
 - cd src/fastapi_backend from root folder
-- uvicorn main:app to start the api server 
+- uvicorn main:app to start the api server
+
+### Deploy with docker container
+- Getting docker image and serve:
+    - by building image from scratch: run ./build_image.sh
+    - by pulling from docker hub:
+        + run docker pull nheeheehee/captcha:latest
+        + run docker run -p 8000:8000 nheeheehee/captcha:latest to serve
+
+
